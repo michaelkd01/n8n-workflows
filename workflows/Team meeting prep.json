@@ -1,0 +1,294 @@
+{
+  "name": "Team meeting prep",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        496,
+        416
+      ],
+      "id": "a3a663e1-ec89-48d1-8a0e-fbe6fedb3d66"
+    },
+    {
+      "parameters": {},
+      "name": "Monday 4pm Schedule",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        496,
+        208
+      ],
+      "id": "79b8926a-34d1-4d43-a00b-a98664dc0ffb"
+    },
+    {
+      "parameters": {
+        "url": "https://www.googleapis.com/drive/v3/files",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "options": {}
+      },
+      "name": "Get Previous Notes",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        704,
+        320
+      ],
+      "id": "f0d79626-7aa6-4dc5-a7ea-258591dfb1fc",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "odmpRYuz1RhWSoPG",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://www.googleapis.com/drive/v3/files",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "'1MTi7B_UMG4Hh1EujcJjRTftf4pmVSrAZ' in parents and name contains '.pdf' and name contains 'Propell Pipeline Report'"
+            },
+            {
+              "name": "orderBy",
+              "value": "name desc"
+            },
+            {
+              "name": "pageSize",
+              "value": "50"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Get Pipeline Report",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        704,
+        512
+      ],
+      "id": "330f8cec-2156-4f8d-998f-46cb8bffc176",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "hBL3gIZjn5Xig4xC",
+          "name": "Google Drive account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "mergeByPosition",
+        "options": {}
+      },
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2,
+      "position": [
+        896,
+        416
+      ],
+      "id": "8a99dd0c-178a-40b1-8b32-1369aa6ce161"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "name": "Create Notes",
+      "type": "n8n-nodes-base.markdown",
+      "typeVersion": 1,
+      "position": [
+        1104,
+        416
+      ],
+      "id": "4c4dce01-3a43-4cc4-be8d-1933540e545a"
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@yourdomain.com",
+        "toEmail": "your-email@example.com",
+        "subject": "Tuesday Meeting Notes Ready",
+        "text": "Your meeting notes are ready for Tuesday's 10:30 AM meeting.\n\nPlease find the notes attached or in the workflow execution.",
+        "options": {}
+      },
+      "name": "Email Notes",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [
+        1296,
+        416
+      ],
+      "id": "438de344-d24a-4833-b9f5-b22b88b20011",
+      "webhookId": "9fed931f-0a68-40a2-9331-48a3e78138e1"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "searchMethod": "query",
+        "queryString": "='1MTi7B_UMG4Hh1EujcJjRTftf4pmVSrAZ' in parents and name contains '.pdf' and name contains 'Propell Pipeline Report'",
+        "limit": 1,
+        "filter": {},
+        "options": {
+          "fields": [
+            "name",
+            "id"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        896,
+        624
+      ],
+      "id": "8c030d26-befd-4b8b-8200-ef9704154250",
+      "name": "Search files and folders",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "hBL3gIZjn5Xig4xC",
+          "name": "Google Drive account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1104,
+        624
+      ],
+      "id": "6b65741a-3e7d-48ab-a25a-4a10ec41b462",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "hBL3gIZjn5Xig4xC",
+          "name": "Google Drive account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Get Previous Notes",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Pipeline Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Monday 4pm Schedule": {
+      "main": [
+        [
+          {
+            "node": "Get Previous Notes",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Pipeline Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Previous Notes": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Pipeline Report": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Search files and folders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Create Notes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Notes": {
+      "main": [
+        [
+          {
+            "node": "Email Notes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search files and folders": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4622496c-e83c-43a8-b89e-c0927ca2b457",
+  "meta": {
+    "instanceId": "04e7e2f5b86f1fe5a31babd1558c254e13ce6c9c23dea8b45a710fa41b47f1c5"
+  },
+  "id": "LtPOixoYSG4xNcMj",
+  "tags": []
+}

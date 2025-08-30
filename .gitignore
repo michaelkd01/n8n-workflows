@@ -1,0 +1,55 @@
+# n8n specific
+*.backup
+*.log
+.n8n/
+database.sqlite
+database.sqlite-journal
+
+# Credentials and sensitive data
+credentials/*.json
+credentials/*.yml
+credentials/*.yaml
+*.env
+.env.*
+!.env.example
+
+# API keys and secrets
+*_secret.json
+*_key.json
+api_keys/
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE files
+.vscode/
+.idea/
+*.iml
+.project
+.classpath
+.settings/
+
+# Node.js (if using n8n locally)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Temporary files
+*.tmp
+*.temp
+tmp/
+temp/
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Local configuration
+config.local.json
+settings.local.json
