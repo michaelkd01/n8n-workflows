@@ -101,3 +101,85 @@ To sync these workflows with your n8n cloud instance:
 ## Support
 
 For issues or questions about these workflows, please create an issue in this repository.
+
+## Automation Scripts
+
+This repository includes automation scripts to streamline your workflow management:
+
+### sync.sh - Interactive Sync Tool
+A comprehensive script for managing workflow synchronization:
+
+```bash
+# Make the script executable
+chmod +x sync.sh
+
+# Run the sync tool
+./sync.sh
+```
+
+Features:
+- Push local changes to GitHub & n8n cloud
+- Pull from GitHub to local
+- Export workflows from n8n cloud
+- Configure n8n cloud connection
+- Interactive menu system
+
+### watch-and-sync.sh - Auto-Sync Watcher
+Automatically syncs changes when you save workflow files:
+
+```bash
+# Make the script executable
+chmod +x watch-and-sync.sh
+
+# Start watching for changes
+./watch-and-sync.sh
+```
+
+Features:
+- Watches for changes in workflows/ directory
+- Auto-commits and pushes to GitHub
+- Triggers n8n cloud pull (if configured)
+- Waits 5 seconds after last change before syncing
+
+### Initial Setup
+
+1. **Configure n8n API Access:**
+   ```bash
+   # Run sync.sh and choose option 5
+   ./sync.sh
+   # Enter your n8n instance URL and API key
+   ```
+
+2. **Get your n8n API Key:**
+   - Go to your n8n cloud instance
+   - Navigate to Settings → API
+   - Generate or copy your API key
+
+3. **Install fswatch (optional, for better performance on macOS):**
+   ```bash
+   brew install fswatch
+   ```
+
+### Workflow Examples
+
+#### Continuous Development Mode
+```bash
+# In one terminal, start the watcher
+./watch-and-sync.sh
+
+# Edit your workflows in another window
+# Changes will auto-sync to GitHub and n8n cloud
+```
+
+#### Manual Sync Mode
+```bash
+# Make your changes, then run
+./sync.sh
+# Choose option 1 to push everything
+```
+
+#### Pull Latest from n8n Cloud
+```bash
+./sync.sh
+# Choose option 3 to export from n8n cloud
+```

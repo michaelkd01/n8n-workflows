@@ -53,3 +53,6 @@ temp/
 # Local configuration
 config.local.json
 settings.local.json
+
+# n8n sync configuration
+n8n-config.json
